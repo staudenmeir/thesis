@@ -1,0 +1,83 @@
+@prefix :           <http://crawler/predicate/> .
+@prefix section:    <http://www.imdb.com/chart/top> .
+@prefix page:       <http://www.imdb.com/page/> .
+@prefix item:       <http://www.imdb.com/item/> .
+@prefix movie:      <http://www.imdb.com/property/movie/> .
+@prefix director:   <http://www.imdb.com/property/director/> .
+@prefix actor:      <http://www.imdb.com/property/actor/> .
+
+_:b
+    :section    section: .
+
+section:
+    :page       page:movies .
+
+page:movies
+    :type       "links" ;
+    :path       "//table[@class='chart full-width']//a[@title]" ;
+    :target     page:movie .
+
+page:movie
+    :type       "item" ;
+    :item       item:movie ;
+    :page       page:directors ;
+    :page       page:actors .
+
+page:directors
+    :type       "items" ;
+    :item       item:director .
+
+page:actors
+    :type       "items" ;
+    :item       item:actor .
+
+item:movie
+    :path       "//div[@id='title-overview-widget']" ;
+    :property   movie:label ;
+    :property   movie:year ;
+    :property   movie:duration ;
+    :property   movie:rating ;
+    :property   movie:description ;
+    :property   movie:poster .
+
+item:director
+    :path       ".//div[@itemprop='director']/a" ;
+    :id         "." ;
+    :property   director:label .
+
+item:actor
+    :path       ".//div[@itemprop='actors']/a" ;
+    :id         "." ;
+    :property   actor:label .
+
+movie:label
+    :path       ".//h1/span" .
+
+movie:year
+    :path       ".//h1//a[starts-with(@href, '/year/')]" ;
+    :pattern    "\\d+" ;
+    :type       xsd:int .
+
+movie:duration
+    :path       ".//time[@itemprop='duration']" ;
+    :attribute  "datetime" ;
+    :type       xsd:duration .
+
+movie:rating
+    :path       ".//span[@itemprop='ratingValue']" ;
+    :replace    """[[",", "."]]""" ;
+    :type       xsd:decimal .
+
+movie:description
+    :path       ".//p[@itemprop='description']" .
+
+movie:poster
+    :path       ".//img[@itemprop='image']" ;
+    :attribute  "src" ;
+    :type       xsd:uri .
+
+director:label
+    :path       "./span" .
+
+actor:label
+    :path       "./span" .

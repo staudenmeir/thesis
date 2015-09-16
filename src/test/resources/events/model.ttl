@@ -1,0 +1,85 @@
+@prefix :               <http://crawler/predicate/> .
+@prefix comedy:         <http://www.muenchen.de/veranstaltungen/events/comedy.html> .
+@prefix sport:          <http://www.muenchen.de/veranstaltungen/events/sport.html> .
+@prefix page:           <http://www.muenchen.de/page/> .
+@prefix item:           <http://www.muenchen.de/item/> .
+@prefix event:          <http://www.muenchen.de/property/event/> .
+@prefix appointment:    <http://www.muenchen.de/property/appointment/> .
+@prefix location:       <http://www.muenchen.de/property/location/> .
+
+_:b
+    :section    comedy: ;
+    :section    sport: .
+
+comedy:
+    :page       page:events .
+
+sport:
+    :page       page:events .
+
+page:events
+    :type       "links" ;
+    :path       "//div[@id='oEventList']//a[@itemprop='url']" ;
+    :scroll     1000 ;
+    :target     page:event .
+
+page:event
+    :type       "item" ;
+    :item       item:event ;
+    :page       page:appointments .
+
+page:appointments
+    :type       "items" ;
+    :item       item:appointment ;
+    :page       page:locations .
+
+page:locations
+    :type       "links" ;
+    :path       ".//a[@itemprop='location']" ;
+    :target     page:location .
+
+page:location
+    :type       "item" ;
+    :item       item:location .
+
+item:event
+    :path       "//div[@id='main']" ;
+    :property   event:label ;
+    :property   event:description  .
+
+item:appointment
+    :path       "//*[@itemtype='http://schema.org/Event'][.//span[@itemprop='startDate']]" ;
+    :property   appointment:start ;
+    :property   appointment:end .
+
+item:location
+    :path       "//div[@id='pagecontent']" ;
+    :property   location:label ;
+    :property   location:address .
+
+event:label
+    :path       ".//h1" .
+
+event:description
+    :path       ".//div[@itemprop='description']" ;
+    :optional   true .
+
+appointment:start
+    :path       ".//span[@itemprop='startDate']" ;
+    :attribute  "content" ;
+    :type       xsd:dateTime ;
+    :format     "yyyy-MM-dd'T'HH:mm:ssZ" .
+
+appointment:end
+    :path       ".//span[@itemprop='endDate']" ;
+    :optional   true ;
+    :attribute  "content" ;
+    :type       xsd:dateTime ;
+    :format     "yyyy-MM-dd'T'HH:mm:ssZ" .
+
+location:label
+    :path       ".//h1" .
+
+location:address
+    :path       ".//div[@id='sidebar']//span[@itemprop='address']" ;
+    :optional   true .

@@ -1,0 +1,38 @@
+@prefix :           <http://crawler/predicate/> .
+@prefix section:    <http://www.bundestag.de/bundestag/parteienfinanzierung/fundstellen50000> .
+@prefix page:       <http://www.bundestag.de/page/> .
+@prefix item:       <http://www.bundestag.de/item/> .
+@prefix donation:   <http://www.bundestag.de/property/donation/> .
+
+_:b
+    :section    section: .
+
+section:
+    :page       page:donations .
+
+page:donations
+    :type       "items" ;
+    :menu       "//div[@class='jahreLeiste']//a[span/text()>='2009']" ;
+    :item       item:donation .
+
+item:donation
+    :path       "//div[@class='inhalt']//tbody/tr[count(td)>1]" ;
+    :property   donation:party ;
+    :property   donation:amount ;
+    :property   donation:donor ;
+    :property   donation:date .
+
+donation:party
+    :path       "./td[1]" .
+
+donation:amount
+    :path       "./td[2]" ;
+    :pattern    "[\\d.]{6,}(,\\d{2})?" ;
+    :replace    """[["\\\\.", ""], [",", "."]]""" ;
+    :type       xsd:decimal .
+
+donation:donor
+    :path       "./td[3]" .
+
+donation:date
+    :path       "./td[4]" .

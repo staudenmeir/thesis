@@ -1,0 +1,107 @@
+@prefix :               <http://crawler/predicate/> .
+@prefix section:        <https://campus.tum.de/tumonline/wborg.display_virtuell?PORGNR=1&PORGTYP=28567> .
+@prefix page:           <https://campus.tum.de/page/> .
+@prefix link:           <https://campus.tum.de/link/> .
+@prefix item:           <https://campus.tum.de/item/> .
+@prefix faculty:        <https://campus.tum.de/property/faculty/> .
+@prefix course:         <https://campus.tum.de/property/course/> .
+@prefix group:          <https://campus.tum.de/property/group/> .
+@prefix appointment:    <https://campus.tum.de/property/appointment/> .
+
+_:b
+    :section    section: .
+
+section:
+    :page       page:faculties .
+
+page:faculties
+    :type       "links" ;
+    :path       "//table[@class='nav']//a" ;
+    :target     page:faculty .
+
+page:faculty
+    :type       "item" ;
+    :item       item:faculty ;
+    :link       link:courses .
+
+page:courses
+    :type       "links" ;
+    :path       "//div[@id='idLVOfferTable']//table[@class='cotable']/tbody/tr/td[4]//a" ;
+    :next       "//div[@id='idLVOfferTable']//table[@class='coTableNavi'][1]//select/following-sibling::a" ;
+    :wait       7000 ;
+    :target     page:course .
+
+page:course
+    :type       "item" ;
+    :item       item:course ;
+    :link       link:groups .
+    
+page:groups
+    :type       "items" ;
+    :item       item:group ;
+    :page       page:appointments .
+
+page:appointments
+    :type       "items" ;
+    :item       item:appointment .
+
+link:courses
+    :path       "//a[text()='Lehrveranstaltungen']" ;
+    :target     page:courses .
+
+link:groups
+    :path       "//label[text()='Abhaltungstermine']/../following-sibling::td//a" ;
+    :target     page:groups .
+
+item:faculty
+    :path       "//table[@class='nav']" ;
+    :property   faculty:label .
+
+item:course
+    :path       "//div[@class=' MaskData']/table" ;
+    :property   course:label ;
+    :property   course:number ;
+    :property   course:type .
+
+item:group
+    :path       "//table[@id='tabLvTermine']//tr[@class='coRow coTableGR1   ']" ;
+    :property   group:label .
+
+item:appointment
+    :path       ".//following-sibling::tr[1]" ;
+    :id         "./td[2]/a" ;
+    :property   appointment:date ;
+    :property   appointment:start ;
+    :property   appointment:end ;
+    :property   appointment:location .
+
+faculty:label
+    :path       ".//span[@class='bold']" .
+
+course:label
+    :path       ".//label[text()='Titel']/../following-sibling::td//span" .
+
+course:number
+    :path       ".//label[text()='Nummer']/../following-sibling::td//span" .
+
+course:type
+    :path       ".//label[text()='Art']/../following-sibling::td//span" .
+
+group:label
+    :path       "./td" .
+
+appointment:date
+    :path       "./td[2]/a" ;
+    :type       xsd:dateTime ;
+    :format     "dd.MM.yyyy" .
+
+appointment:start
+    :path       "./td[3]" .
+
+appointment:end
+    :path       "./td[4]"  .
+
+appointment:location
+    :path       "./td[5]/a"  ;
+    :attribute  "href" ;
+    :type       xsd:anyURI .
