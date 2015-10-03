@@ -1,6 +1,8 @@
 package edu.tum.cs.crawler.repository;
 
 import edu.tum.cs.crawler.model.*;
+import org.joda.time.LocalDate;
+import org.joda.time.LocalTime;
 import org.openrdf.model.Resource;
 import org.openrdf.model.URI;
 import org.openrdf.model.ValueFactory;
@@ -14,9 +16,7 @@ import org.openrdf.sail.memory.model.IntegerMemLiteral;
 
 import java.math.BigDecimal;
 import java.time.Duration;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 public class Repository {
 
@@ -60,6 +60,14 @@ public class Repository {
         connection().add(subject, predicate, factory().createLiteral(object));
     }
 
+    public void insert(Resource subject, URI predicate, LocalDate object) throws RepositoryException {
+        connection().add(subject, predicate, factory().createLiteral(object.toString(), XMLSchema.DATE));
+    }
+
+    public void insert(Resource subject, URI predicate, LocalTime object) throws RepositoryException {
+        connection().add(subject, predicate, factory().createLiteral(object.toString(), XMLSchema.TIME));
+    }
+
     public void insert(Resource subject, URI predicate, String object) throws RepositoryException {
         connection().add(subject, predicate, factory().createLiteral(object));
     }
@@ -70,6 +78,22 @@ public class Repository {
 
     public TupleQueryResult select(String query) throws RepositoryException, MalformedQueryException, QueryEvaluationException {
         return connection().prepareTupleQuery(QueryLanguage.SPARQL, query).evaluate();
+    }
+
+    public List<URI> selectIgnores(Page page) throws QueryEvaluationException, RepositoryException,
+            MalformedQueryException {
+        List<URI> ignores = new ArrayList<URI>();
+        TupleQueryResult result = select(
+                "SELECT ?ignore\n" +
+                "WHERE {\n" +
+                    "<" + page.getUri() + "> <" + Predicate.IGNORE + "> ?ignore\n" +
+                "}");
+        while(result.hasNext()) {
+            BindingSet bindings = result.next();
+            ignores.add((URI) bindings.getValue("ignore"));
+        }
+        result.close();
+        return ignores;
     }
 
     public Item selectItem(Page page) throws QueryEvaluationException, RepositoryException, MalformedQueryException {
@@ -95,10 +119,10 @@ public class Repository {
         List<Link> links = new ArrayList<Link>();
         TupleQueryResult result = select(
                 "SELECT ?uri ?path\n" +
-                "WHERE {\n" +
-                    "<" + page.getUri() + "> <" + Predicate.LINK + "> ?uri .\n" +
-                    "?uri <" + Predicate.PATH + "> ?path\n" +
-                "}");
+                        "WHERE {\n" +
+                        "<" + page.getUri() + "> <" + Predicate.LINK + "> ?uri .\n" +
+                        "?uri <" + Predicate.PATH + "> ?path\n" +
+                        "}");
         while(result.hasNext()) {
             BindingSet bindings = result.next();
             Link link = new Link();
@@ -120,27 +144,30 @@ public class Repository {
             MalformedQueryException {
         List<Page> pages = new ArrayList<Page>();
         TupleQueryResult result = select(
-                "SELECT ?uri ?type ?path ?menu ?next ?wait ?scroll\n" +
-                "WHERE {\n" +
-                    "<" + model.getUri() + "> <" + predicate + "> ?uri .\n" +
-                    "?uri <" + Predicate.TYPE + "> ?type\n" +
-                    "OPTIONAL { ?uri <" + Predicate.PATH + "> ?path }\n" +
-                    "OPTIONAL { ?uri <" + Predicate.MENU + "> ?menu }\n" +
-                    "OPTIONAL { ?uri <" + Predicate.NEXT + "> ?next }\n" +
-                    "OPTIONAL { ?uri <" + Predicate.WAIT + "> ?wait }\n" +
-                    "OPTIONAL { ?uri <" + Predicate.SCROLL + "> ?scroll }\n" +
-                "}");
+                "SELECT ?uri ?type ?path ?next ?wait ?scroll\n" +
+                        "WHERE {\n" +
+                        "<" + model.getUri() + "> <" + predicate + "> ?uri .\n" +
+                        "?uri <" + Predicate.TYPE + "> ?type\n" +
+                        "OPTIONAL { ?uri <" + Predicate.PATH + "> ?path }\n" +
+                        "OPTIONAL { ?uri <" + Predicate.NEXT + "> ?next }\n" +
+                        "OPTIONAL { ?uri <" + Predicate.WAIT + "> ?wait }\n" +
+                        "OPTIONAL { ?uri <" + Predicate.SCROLL + "> ?scroll }\n" +
+                        "}");
         while(result.hasNext()) {
             BindingSet bindings = result.next();
             Page page;
-            String type = bindings.getValue("type").stringValue();
-            page = (type.equals("item")) ? new ItemPage() : (type.equals("items")) ? new ItemsPage() : new LinksPage();
+            URI type = (URI) bindings.getValue("type");
+            if(type.equals(Type.ITEM.getUri())) {
+                page = new ItemPage();
+            } else {
+                page = (type.equals(Type.ITEMS.getUri())) ? new ItemsPage() : new LinksPage();
+            }
             page.setUri((URI) bindings.getValue("uri"));
             if(bindings.hasBinding("scroll")) page.setScroll(((IntegerMemLiteral) bindings.getValue("scroll")).intValue());
             if(page instanceof ItemPage) {
                 ItemPage itemPage = (ItemPage) page;
                 itemPage.setItem(selectItem(page));
-                itemPage.setPages(selectPages(page, Predicate.PAGE));
+                itemPage.setSubPages(selectPages(page, Predicate.SUB));
                 itemPage.setLinks(selectLinks(page));
             }
             if(page instanceof LinksPage) {
@@ -150,10 +177,10 @@ public class Repository {
             }
             if(page instanceof ListPage) {
                 ListPage listPage = (ListPage) page;
-                if(bindings.hasBinding("menu")) listPage.setMenu(bindings.getValue("menu").stringValue());
                 if(bindings.hasBinding("next")) listPage.setNext(bindings.getValue("next").stringValue());
                 if(bindings.hasBinding("wait")) listPage.setWait(((IntegerMemLiteral) bindings.getValue("wait")).intValue());
             }
+            page.setIgnores(selectIgnores(page));
             pages.add(page);
         }
         result.close();
@@ -164,14 +191,13 @@ public class Repository {
             MalformedQueryException {
         List<Property> properties = new ArrayList<Property>();
         TupleQueryResult result = select(
-                "SELECT ?uri ?path ?optional ?attribute ?pattern ?replace ?type ?format\n" +
+                "SELECT ?uri ?path ?optional ?attribute ?regex ?type ?format\n" +
                 "WHERE {\n" +
                     "<" + item.getUri() + "> <" + Predicate.PROPERTY + "> ?uri .\n" +
                     "?uri <" + Predicate.PATH + "> ?path\n" +
                     "OPTIONAL { ?uri <" + Predicate.OPTIONAL + "> ?optional }\n" +
                     "OPTIONAL { ?uri <" + Predicate.ATTRIBUTE + "> ?attribute }\n" +
-                    "OPTIONAL { ?uri <" + Predicate.PATTERN + "> ?pattern }\n" +
-                    "OPTIONAL { ?uri <" + Predicate.REPLACE + "> ?replace }\n" +
+                    "OPTIONAL { ?uri <" + Predicate.REGEX + "> ?regex }\n" +
                     "OPTIONAL { ?uri <" + Predicate.TYPE + "> ?type }\n" +
                     "OPTIONAL { ?uri <" + Predicate.FORMAT + "> ?format }\n" +
                 "}");
@@ -184,14 +210,34 @@ public class Repository {
                     ((BooleanMemLiteral) bindings.getValue("optional")).booleanValue();
             property.setOptional(optional);
             if(bindings.hasBinding("attribute")) property.setAttribute(bindings.getValue("attribute").stringValue());
-            if(bindings.hasBinding("pattern")) property.setPattern(bindings.getValue("pattern").stringValue());
-            if(bindings.hasBinding("replace")) property.setReplace(bindings.getValue("replace").stringValue());
+            if(bindings.hasBinding("regex")) property.setRegex(bindings.getValue("regex").stringValue());
+            property.setReplaces(selectReplaces(property));
             property.setType((bindings.hasBinding("type")) ? (URI) bindings.getValue("type") : XMLSchema.STRING);
             if(bindings.hasBinding("format")) property.setFormat(bindings.getValue("format").stringValue());
             properties.add(property);
         }
         result.close();
         return properties;
+    }
+
+    public Map<String, String> selectReplaces(Property property) throws QueryEvaluationException, RepositoryException,
+            MalformedQueryException {
+        Map<String, String> replaces = new LinkedHashMap<String, String>();
+        TupleQueryResult result = select(
+                "SELECT ?old ?new\n" +
+                "WHERE {\n" +
+                    "<" + property.getUri() + "> <" + Predicate.REPLACE + "> ?uri .\n" +
+                    "?uri <" + Predicate.OLD + "> ?old .\n" +
+                    "?uri <" + Predicate.NEW + "> ?new\n" +
+                    "OPTIONAL { ?uri <" + Predicate.ORDER + "> ?order }\n" +
+                "}\n" +
+                "ORDER BY ?order");
+        while(result.hasNext()) {
+            BindingSet bindings = result.next();
+            replaces.put(bindings.getValue("old").stringValue(), bindings.getValue("new").stringValue());
+        }
+        result.close();
+        return replaces;
     }
 
     public List<Section> selectSections() throws QueryEvaluationException, RepositoryException, MalformedQueryException {

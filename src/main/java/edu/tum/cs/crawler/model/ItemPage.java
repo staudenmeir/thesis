@@ -6,7 +6,7 @@ public class ItemPage extends Page {
 
     protected Item item;
 
-    protected List<Page> pages;
+    protected List<Page> subPages;
 
     protected List<Link> links;
 
@@ -18,12 +18,12 @@ public class ItemPage extends Page {
         this.item = item;
     }
 
-    public List<Page> getPages() {
-        return pages;
+    public List<Page> getSubPages() {
+        return subPages;
     }
 
-    public void setPages(List<Page> pages) {
-        this.pages = pages;
+    public void setSubPages(List<Page> subPages) {
+        this.subPages = subPages;
     }
 
     public List<Link> getLinks() {

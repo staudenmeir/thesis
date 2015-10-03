@@ -1,4 +1,5 @@
 /.idea
+/activemq-data
 /target
 *.iml
 pom.xml.tag

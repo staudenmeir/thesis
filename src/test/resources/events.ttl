@@ -1,45 +1,47 @@
 @prefix :               <http://crawler/predicate/> .
+@prefix type:           <http://crawler/type/> .
 @prefix comedy:         <http://www.muenchen.de/veranstaltungen/events/comedy.html> .
-@prefix sport:          <http://www.muenchen.de/veranstaltungen/events/sport.html> .
+@prefix musical:        <http://www.muenchen.de/veranstaltungen/events/musical.html> .
 @prefix page:           <http://www.muenchen.de/page/> .
 @prefix item:           <http://www.muenchen.de/item/> .
 @prefix event:          <http://www.muenchen.de/property/event/> .
 @prefix appointment:    <http://www.muenchen.de/property/appointment/> .
 @prefix location:       <http://www.muenchen.de/property/location/> .
 
-_:b
+_:
     :section    comedy: ;
-    :section    sport: .
+    :section    musical: .
 
 comedy:
     :page       page:events .
 
-sport:
+musical:
     :page       page:events .
 
 page:events
-    :type       "links" ;
+    :type       type:links ;
     :path       "//div[@id='oEventList']//a[@itemprop='url']" ;
     :scroll     1000 ;
     :target     page:event .
 
 page:event
-    :type       "item" ;
+    :type       type:item ;
     :item       item:event ;
-    :page       page:appointments .
+    :sub        page:appointments ;
+    :ignore     <http://www.muenchen.de/veranstaltungen/event/11317.html> .
 
 page:appointments
-    :type       "items" ;
+    :type       type:items ;
     :item       item:appointment ;
-    :page       page:locations .
+    :sub        page:locations .
 
 page:locations
-    :type       "links" ;
+    :type       type:links ;
     :path       ".//a[@itemprop='location']" ;
     :target     page:location .
 
 page:location
-    :type       "item" ;
+    :type       type:item ;
     :item       item:location .
 
 item:event

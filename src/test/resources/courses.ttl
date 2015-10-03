@@ -1,4 +1,5 @@
 @prefix :               <http://crawler/predicate/> .
+@prefix type:           <http://crawler/type/> .
 @prefix section:        <https://campus.tum.de/tumonline/wborg.display_virtuell?PORGNR=1&PORGTYP=28567> .
 @prefix page:           <https://campus.tum.de/page/> .
 @prefix link:           <https://campus.tum.de/link/> .
@@ -8,41 +9,41 @@
 @prefix group:          <https://campus.tum.de/property/group/> .
 @prefix appointment:    <https://campus.tum.de/property/appointment/> .
 
-_:b
+_:
     :section    section: .
 
 section:
     :page       page:faculties .
 
 page:faculties
-    :type       "links" ;
+    :type       type:links ;
     :path       "//table[@class='nav']//a" ;
     :target     page:faculty .
 
 page:faculty
-    :type       "item" ;
+    :type       type:item ;
     :item       item:faculty ;
     :link       link:courses .
 
 page:courses
-    :type       "links" ;
+    :type       type:links ;
     :path       "//div[@id='idLVOfferTable']//table[@class='cotable']/tbody/tr/td[4]//a" ;
     :next       "//div[@id='idLVOfferTable']//table[@class='coTableNavi'][1]//select/following-sibling::a" ;
     :wait       7000 ;
     :target     page:course .
 
 page:course
-    :type       "item" ;
+    :type       type:item ;
     :item       item:course ;
     :link       link:groups .
     
 page:groups
-    :type       "items" ;
+    :type       type:items ;
     :item       item:group ;
-    :page       page:appointments .
+    :sub        page:appointments .
 
 page:appointments
-    :type       "items" ;
+    :type       type:items: ;
     :item       item:appointment .
 
 link:courses
@@ -92,14 +93,18 @@ group:label
 
 appointment:date
     :path       "./td[2]/a" ;
-    :type       xsd:dateTime ;
+    :type       xsd:date ;
     :format     "dd.MM.yyyy" .
 
 appointment:start
-    :path       "./td[3]" .
+    :path       "./td[3]" ;
+    :type       xsd:time ;
+    :format     "HH:mm" .
 
 appointment:end
-    :path       "./td[4]"  .
+    :path       "./td[4]"  ;
+    :type       xsd:time ;
+    :format     "HH:mm" .
 
 appointment:location
     :path       "./td[5]/a"  ;

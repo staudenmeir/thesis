@@ -4,8 +4,6 @@ public class LinksPage extends Page implements ListPage {
 
     protected String path;
 
-    protected String menu;
-
     protected String next;
 
     protected Integer wait;
@@ -18,18 +16,6 @@ public class LinksPage extends Page implements ListPage {
 
     public void setPath(String path) {
         this.path = path;
-    }
-
-    public String getMenu() {
-        return menu;
-    }
-
-    public void setMenu(String menu) {
-        this.menu = menu;
-    }
-
-    public boolean hasMenu() {
-        return (menu != null);
     }
 
     public String getNext() {

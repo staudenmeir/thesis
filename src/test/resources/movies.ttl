@@ -1,34 +1,40 @@
 @prefix :           <http://crawler/predicate/> .
-@prefix section:    <http://www.imdb.com/chart/top> .
+@prefix type:       <http://crawler/type/> .
+@prefix top:        <http://www.imdb.com/chart/top> .
+@prefix bottom:     <http://www.imdb.com/chart/bottom> .
 @prefix page:       <http://www.imdb.com/page/> .
 @prefix item:       <http://www.imdb.com/item/> .
 @prefix movie:      <http://www.imdb.com/property/movie/> .
 @prefix director:   <http://www.imdb.com/property/director/> .
 @prefix actor:      <http://www.imdb.com/property/actor/> .
 
-_:b
-    :section    section: .
+_:
+    :section    top: ;
+    :section    bottom: .
 
-section:
+top:
+    :page       page:movies .
+
+bottom:
     :page       page:movies .
 
 page:movies
-    :type       "links" ;
+    :type       type:links ;
     :path       "//table[@class='chart full-width']//a[@title]" ;
     :target     page:movie .
 
 page:movie
-    :type       "item" ;
+    :type       type:item ;
     :item       item:movie ;
-    :page       page:directors ;
-    :page       page:actors .
+    :sub        page:directors ;
+    :sub        page:actors .
 
 page:directors
-    :type       "items" ;
+    :type       type:items ;
     :item       item:director .
 
 page:actors
-    :type       "items" ;
+    :type       type:items ;
     :item       item:actor .
 
 item:movie
@@ -55,7 +61,7 @@ movie:label
 
 movie:year
     :path       ".//h1//a[starts-with(@href, '/year/')]" ;
-    :pattern    "\\d+" ;
+    :regex      "\\d+" ;
     :type       xsd:int .
 
 movie:duration
@@ -65,7 +71,10 @@ movie:duration
 
 movie:rating
     :path       ".//span[@itemprop='ratingValue']" ;
-    :replace    """[[",", "."]]""" ;
+    :replace    [
+        :old    "," ;
+        :new    "."
+    ] ;
     :type       xsd:decimal .
 
 movie:description
@@ -74,7 +83,7 @@ movie:description
 movie:poster
     :path       ".//img[@itemprop='image']" ;
     :attribute  "src" ;
-    :type       xsd:uri .
+    :type       xsd:anyURI .
 
 director:label
     :path       "./span" .

@@ -1,10 +1,8 @@
 package edu.tum.cs.crawler.model;
 
-import org.json.JSONArray;
 import org.openrdf.model.URI;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Map;
 
 public class Property extends Model {
 
@@ -14,9 +12,9 @@ public class Property extends Model {
 
     protected String attribute;
 
-    protected String pattern;
+    protected String regex;
 
-    protected List<List<String>> replace;
+    protected Map<String, String> replaces;
 
     protected URI type;
 
@@ -38,16 +36,16 @@ public class Property extends Model {
         this.optional = optional;
     }
 
-    public String getPattern() {
-        return pattern;
+    public String getRegex() {
+        return regex;
     }
 
-    public void setPattern(String pattern) {
-        this.pattern = pattern;
+    public void setRegex(String regex) {
+        this.regex = regex;
     }
 
-    public boolean hasPattern() {
-        return (pattern != null);
+    public boolean hasRegex() {
+        return (regex != null);
     }
 
     public String getAttribute() {
@@ -62,26 +60,12 @@ public class Property extends Model {
         return (attribute != null);
     }
 
-    public List<List<String>> getReplace() {
-        return replace;
+    public Map<String, String> getReplaces() {
+        return replaces;
     }
 
-    public void setReplace(String replace) {
-        List<List<String>> list = new ArrayList<List<String>>();
-        JSONArray array = new JSONArray(replace);
-        for(int i = 0; i < array.length(); i++) {
-            List<String> entry = (new ArrayList<String>());
-            JSONArray array2 = (JSONArray) array.get(i);
-            for(int j = 0; j < array2.length(); j++) {
-                entry.add(array2.get(j).toString());
-            }
-            list.add(entry);
-        }
-        this.replace = list;
-    }
-
-    public boolean hasReplace() {
-        return (replace != null);
+    public void setReplaces(Map<String, String> replaces) {
+        this.replaces = replaces;
     }
 
     public URI getType() {

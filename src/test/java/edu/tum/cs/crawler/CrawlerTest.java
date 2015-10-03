@@ -53,6 +53,10 @@ public class CrawlerTest extends TestCase {
 
     @After
     public void tearDown() throws RepositoryException {
+        configRepository.getConnection().close();
+        dataRepository.getConnection().close();
+        logRepository.getConnection().close();
+        modelRepository.getConnection().close();
         configRepository.shutDown();
         dataRepository.shutDown();
         logRepository.shutDown();
@@ -62,12 +66,9 @@ public class CrawlerTest extends TestCase {
     @Test
     public void testCourses() throws RepositoryException, RDFParseException, IOException, QueryEvaluationException,
             MalformedQueryException, InterruptedException, JMSException {
-        seed(modelRepository, "courses/model");
+        seed(modelRepository, "courses");
 
         crawler().run();
-
-        // Test total number of entries (... courses).
-        // TODO: Assert.assertEquals(, count(dataRepository));
 
         List<List<Value>> entries = entries(dataRepository);
     }
@@ -75,14 +76,14 @@ public class CrawlerTest extends TestCase {
     @Test
     public void testDonations() throws RepositoryException, RDFParseException, IOException, InterruptedException,
             QueryEvaluationException, MalformedQueryException, JMSException {
-        seed(modelRepository, "donations/model");
+        seed(modelRepository, "donations");
 
         crawler().run();
 
-        // Test total number of entries (158 donations).
-        Assert.assertEquals(790, count(dataRepository));
+        // Test total number of entries (159 donations).
+        Assert.assertEquals(795, count(dataRepository));
 
-        // Test latest donation (01.07.2015).
+        // Test complete donation (01.07.2015).
         String root = "http://www.bundestag.de/";
         String section = root + "bundestag/parteienfinanzierung/fundstellen50000";
         String item = section + "#744b9335814163f1478ec4be4f4b3cb2bb6ce4e2";
@@ -105,12 +106,9 @@ public class CrawlerTest extends TestCase {
     @Test
     public void testEvents() throws RepositoryException, RDFParseException, IOException, QueryEvaluationException,
             MalformedQueryException, InterruptedException, JMSException {
-        seed(modelRepository, "events/model");
+        seed(modelRepository, "events");
 
         crawler().run();
-
-        // Test total number of entries (... events).
-        // TODO: Assert.assertEquals(, count(dataRepository));
 
         List<List<Value>> entries = entries(dataRepository);
     }
@@ -118,12 +116,9 @@ public class CrawlerTest extends TestCase {
     @Test
     public void testMovies() throws RepositoryException, RDFParseException, IOException, QueryEvaluationException,
             MalformedQueryException, InterruptedException, JMSException {
-        seed(modelRepository, "movies/model");
+        seed(modelRepository, "movies");
 
         crawler().run();
-
-        // Test total number of entries (... movies).
-        // TODO: Assert.assertEquals(, count(dataRepository));
 
         List<List<Value>> entries = entries(dataRepository);
     }
@@ -131,12 +126,9 @@ public class CrawlerTest extends TestCase {
     @Test
     public void testRecipes() throws RepositoryException, RDFParseException, IOException, QueryEvaluationException,
             MalformedQueryException, InterruptedException, JMSException {
-        seed(modelRepository, "recipes/model");
+        seed(modelRepository, "recipes");
 
         crawler().run();
-
-        // Test total number of entries (... recipes).
-        // TODO: Assert.assertEquals(, count(dataRepository));
 
         List<List<Value>> entries = entries(dataRepository);
     }

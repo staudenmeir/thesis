@@ -5,12 +5,16 @@ import edu.tum.cs.crawler.queue.Element;
 import edu.tum.cs.crawler.repository.Repository;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
+import org.joda.time.LocalTime;
 import org.joda.time.format.DateTimeFormat;
 import org.json.JSONObject;
 import org.openqa.selenium.*;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openrdf.model.URI;
 import org.openrdf.model.impl.URIImpl;
+import org.openrdf.model.vocabulary.XMLSchema;
 import org.openrdf.query.MalformedQueryException;
 import org.openrdf.query.QueryEvaluationException;
 import org.openrdf.repository.RepositoryException;
@@ -105,6 +109,8 @@ public class Crawler {
             if(object instanceof Date) dataRepository.insert(uri, entry.getKey(), (Date) object);
             if(object instanceof Duration) dataRepository.insert(uri, entry.getKey(), (Duration) object);
             if(object instanceof Integer) dataRepository.insert(uri, entry.getKey(), (Integer) object);
+            if(object instanceof LocalDate) dataRepository.insert(uri, entry.getKey(), (LocalDate) object);
+            if(object instanceof LocalTime) dataRepository.insert(uri, entry.getKey(), (LocalTime) object);
             if(object instanceof String) dataRepository.insert(uri, entry.getKey(), (String) object);
             if(object instanceof URI) dataRepository.insert(uri, entry.getKey(), (URI) object);
         }
@@ -172,8 +178,8 @@ public class Crawler {
             // Insert data into repository.
             insert(itemUri, item, data, parent);
 
-            // Process pages.
-            for(Page page : itemPage.getPages()) {
+            // Process sub pages.
+            for(Page page : itemPage.getSubPages()) {
                 processUri(uri, page, itemUri, itemRoot);
             }
 
@@ -201,37 +207,24 @@ public class Crawler {
      */
     protected void processListPage(URI uri, ListPage listPage, URI parent, SearchContext root)
             throws InterruptedException, RepositoryException, JMSException {
-        // Get menu links, if required.
-        if(listPage.hasMenu()) {
-            List<WebElement> links = root.findElements(By.xpath(listPage.getMenu()));
-            listPage.setMenu(null);
-            if(listPage.hasWait()) {
-                for(WebElement link : links) {
-                    link.click();
-                    Thread.sleep(listPage.getWait());
-                    processUri(uri, (Page) listPage, parent, root);
-                }
-                driver.navigate().to(uri.toString());
-            } else {
-                for(WebElement link : links) {
-                    send(link.getAttribute("href"), (Page) listPage, parent);
-                }
-            }
-        }
-
         // Click next button until it disappears, if required.
         if(listPage.hasNext()) {
             String next = listPage.getNext();
-            listPage.setNext(null);
-            while(true) {
-                List<WebElement> nextElement = root.findElements(By.xpath(next));
-                if(nextElement.isEmpty()) break;
-                nextElement.get(0).click();
-                if(listPage.hasWait()) Thread.sleep(listPage.getWait());
-                processUri(uri, (Page) listPage, parent, root);
+            List<WebElement> nextElement;
+            if(listPage.hasWait()) {
+                listPage.setNext(null);
+                while(true) {
+                    nextElement = root.findElements(By.xpath(next));
+                    if(nextElement.isEmpty()) break;
+                    nextElement.get(0).click();
+                    if(listPage.hasWait()) Thread.sleep(listPage.getWait());
+                    processUri(uri, (Page) listPage, parent, root);
+                }
+                listPage.setNext(next);
+            } else {
+                nextElement = root.findElements(By.xpath(next));
+                if(!nextElement.isEmpty()) send(nextElement.get(0).getAttribute("href"), (Page) listPage, parent);
             }
-            listPage.setNext(next);
-            driver.navigate().to(uri.toString());
         }
     }
 
@@ -240,8 +233,13 @@ public class Crawler {
      */
     protected void processMessage(ObjectMessage message) throws JMSException, InterruptedException, RepositoryException {
         Element element = (Element) message.getObject();
-        driver.navigate().to(element.getUri().toString());
-        processUri(element.getUri(), element.getPage(), element.getParent(), driver);
+        URI uri = element.getUri();
+        Page page = element.getPage();
+        if(!page.ignored(uri)) {
+            driver.navigate().to(uri.toString());
+            processUri(uri, page, element.getParent(), driver);
+            logRepository.insert(uri, XMLSchema.DATETIME, new Date());
+        }
         session.commit();
     }
 
@@ -251,9 +249,9 @@ public class Crawler {
     protected void processUri(URI uri, Page page, URI parent, SearchContext root) throws RepositoryException,
             InterruptedException, JMSException {
         prepareUri(page);
-        if(page instanceof ListPage) processListPage(uri, (ListPage) page, parent, root);
         if(page instanceof ItemPage) processItemPage(uri, (ItemPage) page, parent, root);
         if(page instanceof LinksPage) processLinksPage((LinksPage) page, parent, root);
+        if(page instanceof ListPage) processListPage(uri, (ListPage) page, parent, root);
     }
 
     /**
@@ -293,28 +291,29 @@ public class Crawler {
         // Get attribute value if required, otherwise the element's text.
         String value = (property.hasAttribute()) ? element.getAttribute(property.getAttribute()) : element.getText();
 
-        // Run pattern matching if required.
-        if(property.hasPattern()) {
-            Matcher matcher = Pattern.compile(property.getPattern()).matcher(value);
+        // Run regex matching if required.
+        if(property.hasRegex()) {
+            Matcher matcher = Pattern.compile(property.getRegex()).matcher(value);
             value = (matcher.find()) ? matcher.group() : "";
         }
 
         // Run replacements if required.
-        if(property.hasReplace()) {
-            for(List<String> replace : property.getReplace()) {
-                value = value.replaceAll(replace.get(0), replace.get(1));
-            }
+        for(Map.Entry<String, String> replace : property.getReplaces().entrySet()) {
+            value = value.replaceAll(replace.getKey(), replace.getValue());
         }
 
         // Convert value if required.
         URI type = property.getType();
-        if(type.getLocalName().equals("anyURI")) return new URIImpl(value);
-        if(type.getLocalName().equals("dateTime")) {
-            return DateTimeFormat.forPattern(property.getFormat()).parseDateTime(value).toDate();
+        if(type.equals(XMLSchema.ANYURI)) return new URIImpl(value);
+        if(type.equals(XMLSchema.DATE) || type.equals(XMLSchema.DATETIME) || type.equals(XMLSchema.TIME)) {
+            DateTime dateTime = DateTimeFormat.forPattern(property.getFormat()).parseDateTime(value);
+            if(type.equals(XMLSchema.DATE)) return dateTime.toLocalDate();
+            if(type.equals(XMLSchema.DATETIME)) return dateTime.toDate();
+            if(type.equals(XMLSchema.TIME)) return dateTime.toLocalTime();
         }
-        if(type.getLocalName().equals("decimal")) return new BigDecimal(value);
-        if(type.getLocalName().equals("duration")) return Duration.parse(value);
-        if(type.getLocalName().equals("int")) return new Integer(value);
+        if(type.equals(XMLSchema.DECIMAL)) return new BigDecimal(value);
+        if(type.equals(XMLSchema.DURATION)) return Duration.parse(value);
+        if(type.equals(XMLSchema.INT)) return new Integer(value);
 
         // Return string otherwise.
         return value;

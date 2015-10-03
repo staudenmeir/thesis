@@ -1,18 +1,19 @@
 @prefix :           <http://crawler/predicate/> .
+@prefix type:       <http://crawler/type/> .
 @prefix section:    <http://www.bundestag.de/bundestag/parteienfinanzierung/fundstellen50000> .
 @prefix page:       <http://www.bundestag.de/page/> .
 @prefix item:       <http://www.bundestag.de/item/> .
 @prefix donation:   <http://www.bundestag.de/property/donation/> .
 
-_:b
+_:
     :section    section: .
 
 section:
     :page       page:donations .
 
 page:donations
-    :type       "items" ;
-    :menu       "//div[@class='jahreLeiste']//a[span/text()>='2009']" ;
+    :type       type:items ;
+    :next       "//div[@class='jahreLeiste']//li[@class='aktiv']/following-sibling::li[1][.//span/text()>='2009']/a" ;
     :item       item:donation .
 
 item:donation
@@ -27,8 +28,17 @@ donation:party
 
 donation:amount
     :path       "./td[2]" ;
-    :pattern    "[\\d.]{6,}(,\\d{2})?" ;
-    :replace    """[["\\\\.", ""], [",", "."]]""" ;
+    :regex      "[\\d.]{6,}(,\\d{2})?" ;
+    :replace    [
+        :old    "[.]" ;
+        :new    "" ;
+        :order  1
+    ] ;
+    :replace    [
+        :old    "," ;
+        :new    "." ;
+        :order  2
+    ] ;
     :type       xsd:decimal .
 
 donation:donor

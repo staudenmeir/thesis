@@ -1,29 +1,35 @@
 @prefix :           <http://crawler/predicate/> .
-@prefix section:    <http://www.chefkoch.de/rs/s0/Obazda/Rezepte.html> .
+@prefix type:       <http://crawler/type/> .
+@prefix section1:   <http://www.chefkoch.de/rs/s0/Donauwelle/Rezepte.html> .
+@prefix section2:   <http://www.chefkoch.de/rs/s0/Kaiserschmarrn/Rezepte.html> .
 @prefix page:       <http://www.chefkoch.de/page/> .
 @prefix item:       <http://www.chefkoch.de/item/> .
 @prefix recipe:     <http://www.chefkoch.de/property/recipe/> .
 @prefix ingredient: <http://www.chefkoch.de/property/ingredient/> .
 
-_:b
-    :section    section: .
+_:
+    :section    section1: ;
+    :section    section2: .
 
-section:
+section1:
+    :page       page:recipes .
+
+section2:
     :page       page:recipes .
     
 page:recipes
-    :type       "links" ;
+    :type       type:links ;
     :path       "//table[@class='search-result-table recipe-result']//a[@class='search-result-title']" ;
     :next       "//a[@class='pagination-item pagination-next']" ;
     :target     page:recipe .
 
 page:recipe
-    :type       "item" ;
+    :type       type:item ;
     :item       item:recipe ;
-    :page       page:ingredients .
+    :sub        page:ingredients .
 
 page:ingredients
-    :type       "items" ;
+    :type       type:items ;
     :item       item:ingredient .
 
 item:recipe
@@ -33,7 +39,8 @@ item:recipe
     :property   recipe:workingTime ;
     :property   recipe:difficulty ;
     :property   recipe:instructions ;
-    :property   recipe:portions .
+    :property   recipe:portions ;
+    :property   recipe:rating .
 
 item:ingredient
     :path       ".//div[@id='recipe-incredients']//tr" ;
@@ -44,16 +51,17 @@ recipe:label
     :path       ".//h1" .
 
 recipe:summary
-    :optional   true ;
-    :path       ".//div[@class='summary']" .
+    :path       ".//div[@class='summary']" ;
+    :optional   true .
 
 recipe:workingTime
-    :path       ".//h2[text()='Zubereitung']/following-sibling::p" ;
-    :pattern    "(?<=Arbeitszeit: ).+?(?= /)" .
+    :path       ".//span[@class='prepTime']/span" ;
+    :attribute  "title" ;
+    :type       xsd:duration .
 
 recipe:difficulty
     :path       ".//h2[text()='Zubereitung']/following-sibling::p" ;
-    :pattern    "(?<=Schwierigkeitsgrad: ).+?(?= /)" .
+    :regex      "(?<=Schwierigkeitsgrad: ).+?(?= /)" .
 
 recipe:instructions
     :path       ".//div[@id='rezept-zubereitung']" .
@@ -62,6 +70,17 @@ recipe:portions
     :path       ".//input[@id='divisor']" ;
     :attribute  "value" ;
     :type       xsd:int .
+
+recipe:rating
+    :path       ".//div[@id='rezept-bewertung-box']//span[starts-with(@class, 'rating ')][not(contains(@class, 'rating-unbewertet'))]" ;
+    :optional   true ;
+    :attribute  "class" ;
+    :regex      "(?<=rating-)\\d(_\\d)?" ;
+    :replace    [
+        :old    "_" ;
+        :new    "."
+    ] ;
+    :type       xsd:decimal .
 
 ingredient:label
     :path       "./td[@class='name']" .

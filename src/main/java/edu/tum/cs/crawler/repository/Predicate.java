@@ -2,9 +2,10 @@ package edu.tum.cs.crawler.repository;
 
 public enum Predicate {
 
-    ATTRIBUTE("attribute"), FORMAT("format"), ID("id"), ITEM("item"), LINK("link"), MENU("menu"), NEXT("next"),
-    OPTIONAL("optional"), PAGE("page"), PATH("path"), PATTERN("pattern"), PROPERTY("property"), REPLACE("replace"),
-    SCROLL("scroll"), SECTION("section"), TARGET("target"), TYPE("type"), WAIT("wait");
+    ATTRIBUTE("attribute"), FORMAT("format"), ID("id"), IGNORE("ignore"), ITEM("item"), LINK("link"), NEW("new"),
+    NEXT("next"), OLD("old"), OPTIONAL("optional"), ORDER("order"), PAGE("page"), PATH("path"), PROPERTY("property"),
+    REGEX("regex"), REPLACE("replace"), SCROLL("scroll"), SECTION("section"), SUB("sub"), TARGET("target"),
+    TYPE("type"), WAIT("wait");
 
     private String text;
 
