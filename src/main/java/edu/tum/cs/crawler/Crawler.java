@@ -12,6 +12,8 @@ import org.joda.time.format.DateTimeFormat;
 import org.json.JSONObject;
 import org.openqa.selenium.*;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxProfile;
+import org.openqa.selenium.firefox.internal.ProfilesIni;
 import org.openrdf.model.URI;
 import org.openrdf.model.impl.URIImpl;
 import org.openrdf.model.vocabulary.XMLSchema;
@@ -84,7 +86,8 @@ public class Crawler {
         }
 
         // Process queue.
-        driver = new FirefoxDriver();
+        FirefoxProfile profile = (new ProfilesIni()).getProfile("crawlerx");
+        driver = new FirefoxDriver(profile);
         if(message != null) processMessage(message);
         while(true) {
             message = (ObjectMessage) consumer.receive(10000);
@@ -96,6 +99,19 @@ public class Crawler {
         // Close queue.
         session.close();
         connection.close();
+    }
+
+    /**
+     * Cleans uri by removing query parameters and the anchor.
+     */
+    protected URI clean(URI uri, Page page) {
+        String string = uri.toString();
+        for(String param : page.getParams()) {
+            string = string.replaceAll("[&?]" + Pattern.quote(param) + ".*?(?=&|\\?|$)", "");
+        }
+        if(string.contains("&") && !string.contains("?")) string = string.replaceFirst("&", "?");
+        string = string.split("#")[0];
+        return new URIImpl(string);
     }
 
     /**
@@ -165,6 +181,7 @@ public class Crawler {
                 if(item.hasId()) {
                     WebElement id = itemRoot.findElement(By.xpath(item.getId()));
                     itemUri = new URIImpl(id.getAttribute("href"));
+                    itemUri = clean(itemUri, itemPage);
                 } else {
                     JSONObject jsonObject = new JSONObject();
                     for(Map.Entry<URI, Object> entry : data.entrySet()) {
@@ -187,7 +204,7 @@ public class Crawler {
             for(Link link : itemPage.getLinks()) {
                 WebElement linkElement = root.findElement(By.xpath(link.getPath()));
                 URI linkUri = new URIImpl(linkElement.getAttribute("href"));
-                send(linkUri, link.getTarget(), parent);
+                send(linkUri, link.getTarget(), uri);
             }
         }
     }
@@ -279,7 +296,7 @@ public class Crawler {
      * Sends uri to queue.
      */
     protected void send(URI uri, Page page, URI parent) throws JMSException {
-        Element element = new Element(uri, page, parent);
+        Element element = new Element(clean(uri, page), page, parent);
         ObjectMessage message = session.createObjectMessage(element);
         producer.send(message);
     }

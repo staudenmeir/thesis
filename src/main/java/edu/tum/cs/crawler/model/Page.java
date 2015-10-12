@@ -10,6 +10,8 @@ public abstract class Page extends Model {
 
     protected List<URI> ignores;
 
+    protected List<String> params;
+
     public Integer getScroll() {
         return scroll;
     }
@@ -31,6 +33,14 @@ public abstract class Page extends Model {
             if(ignore.equals(uri)) return true;
         }
         return false;
+    }
+
+    public List<String> getParams() {
+        return params;
+    }
+
+    public void setParams(List<String> params) {
+        this.params = params;
     }
 
 }

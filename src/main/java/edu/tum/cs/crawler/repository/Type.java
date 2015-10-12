@@ -9,7 +9,7 @@ public enum Type {
 
     private String text;
 
-    private static final String prefix = "http://crawler/type/";
+    private static final String prefix = "crawler://type/";
 
     Type(String text){
         this.text = text;

@@ -6,7 +6,6 @@ import org.joda.time.LocalTime;
 import org.openrdf.model.Resource;
 import org.openrdf.model.URI;
 import org.openrdf.model.ValueFactory;
-import org.openrdf.model.impl.DecimalLiteralImpl;
 import org.openrdf.model.vocabulary.XMLSchema;
 import org.openrdf.query.*;
 import org.openrdf.repository.RepositoryConnection;
@@ -26,16 +25,10 @@ public class Repository {
         this.repository = repository;
     }
 
-    public boolean ask(URI subject, URI predicate, BigDecimal object) throws RepositoryException,
+    public boolean ask(URI subject, URI predicate, Object object, URI type) throws RepositoryException,
             MalformedQueryException, QueryEvaluationException {
         return connection().prepareBooleanQuery(QueryLanguage.SPARQL,
-                "ASK { <" + subject + "> <" + predicate + "> " + object + " }").evaluate();
-    }
-
-    public boolean ask(URI subject, URI predicate, String object) throws RepositoryException,
-            MalformedQueryException, QueryEvaluationException {
-        return connection().prepareBooleanQuery(QueryLanguage.SPARQL,
-                "ASK { <" + subject + "> <" + predicate + "> \"\"\"" + object + "\"\"\" }").evaluate();
+                "ASK { <" + subject + "> <" + predicate + "> \"\"\"" + object + "\"\"\"^^<" + type + "> }").evaluate();
     }
 
     public boolean ask(URI subject, URI predicate, URI object) throws RepositoryException,
@@ -45,7 +38,7 @@ public class Repository {
     }
 
     public void insert(Resource subject, URI predicate, BigDecimal object) throws RepositoryException {
-        connection().add(subject, predicate, new DecimalLiteralImpl(object));
+        insert(subject, predicate, object, XMLSchema.DECIMAL);
     }
 
     public void insert(Resource subject, URI predicate, Date object) throws RepositoryException {
@@ -53,23 +46,27 @@ public class Repository {
     }
 
     public void insert(Resource subject, URI predicate, Duration object) throws RepositoryException {
-        connection().add(subject, predicate, factory().createLiteral(object.toString(), XMLSchema.DURATION));
+        insert(subject, predicate, object, XMLSchema.DURATION);
     }
 
     public void insert(Resource subject, URI predicate, Integer object) throws RepositoryException {
-        connection().add(subject, predicate, factory().createLiteral(object));
+        insert(subject, predicate, object, XMLSchema.INT);
     }
 
     public void insert(Resource subject, URI predicate, LocalDate object) throws RepositoryException {
-        connection().add(subject, predicate, factory().createLiteral(object.toString(), XMLSchema.DATE));
+        insert(subject, predicate, object, XMLSchema.DATE);
     }
 
     public void insert(Resource subject, URI predicate, LocalTime object) throws RepositoryException {
-        connection().add(subject, predicate, factory().createLiteral(object.toString(), XMLSchema.TIME));
+        insert(subject, predicate, object, XMLSchema.TIME);
     }
 
     public void insert(Resource subject, URI predicate, String object) throws RepositoryException {
-        connection().add(subject, predicate, factory().createLiteral(object));
+        insert(subject, predicate, object, XMLSchema.STRING);
+    }
+
+    public void insert(Resource subject, URI predicate, Object object, URI type) throws RepositoryException {
+        connection().add(subject, predicate, factory().createLiteral(object.toString(), type));
     }
 
     public void insert(Resource subject, URI predicate, URI object) throws RepositoryException {
@@ -119,10 +116,10 @@ public class Repository {
         List<Link> links = new ArrayList<Link>();
         TupleQueryResult result = select(
                 "SELECT ?uri ?path\n" +
-                        "WHERE {\n" +
-                        "<" + page.getUri() + "> <" + Predicate.LINK + "> ?uri .\n" +
-                        "?uri <" + Predicate.PATH + "> ?path\n" +
-                        "}");
+                "WHERE {\n" +
+                    "<" + page.getUri() + "> <" + Predicate.LINK + "> ?uri .\n" +
+                    "?uri <" + Predicate.PATH + "> ?path\n" +
+                "}");
         while(result.hasNext()) {
             BindingSet bindings = result.next();
             Link link = new Link();
@@ -145,14 +142,14 @@ public class Repository {
         List<Page> pages = new ArrayList<Page>();
         TupleQueryResult result = select(
                 "SELECT ?uri ?type ?path ?next ?wait ?scroll\n" +
-                        "WHERE {\n" +
-                        "<" + model.getUri() + "> <" + predicate + "> ?uri .\n" +
-                        "?uri <" + Predicate.TYPE + "> ?type\n" +
-                        "OPTIONAL { ?uri <" + Predicate.PATH + "> ?path }\n" +
-                        "OPTIONAL { ?uri <" + Predicate.NEXT + "> ?next }\n" +
-                        "OPTIONAL { ?uri <" + Predicate.WAIT + "> ?wait }\n" +
-                        "OPTIONAL { ?uri <" + Predicate.SCROLL + "> ?scroll }\n" +
-                        "}");
+                "WHERE {\n" +
+                    "<" + model.getUri() + "> <" + predicate + "> ?uri .\n" +
+                    "?uri <" + Predicate.TYPE + "> ?type\n" +
+                    "OPTIONAL { ?uri <" + Predicate.PATH + "> ?path }\n" +
+                    "OPTIONAL { ?uri <" + Predicate.NEXT + "> ?next }\n" +
+                    "OPTIONAL { ?uri <" + Predicate.WAIT + "> ?wait }\n" +
+                    "OPTIONAL { ?uri <" + Predicate.SCROLL + "> ?scroll }\n" +
+                "}");
         while(result.hasNext()) {
             BindingSet bindings = result.next();
             Page page;
@@ -181,10 +178,28 @@ public class Repository {
                 if(bindings.hasBinding("wait")) listPage.setWait(((IntegerMemLiteral) bindings.getValue("wait")).intValue());
             }
             page.setIgnores(selectIgnores(page));
+            page.setParams(selectParams(page));
             pages.add(page);
         }
         result.close();
         return pages;
+    }
+
+    public List<String> selectParams(Page page) throws QueryEvaluationException, RepositoryException,
+            MalformedQueryException {
+        List<String> params = new ArrayList<String>();
+        TupleQueryResult result = select(
+                "SELECT ?param\n" +
+                "WHERE {\n" +
+                    "<" + page.getUri() + "> <" + Predicate.PARAM + "> ?param\n" +
+                "}");
+        while(result.hasNext()) {
+            BindingSet bindings = result.next();
+            String param = bindings.getValue("param").stringValue();
+            params.add(param);
+        }
+        result.close();
+        return params;
     }
 
     public List<Property> selectProperties(Item item) throws RepositoryException, QueryEvaluationException,

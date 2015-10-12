@@ -1,5 +1,5 @@
-@prefix :               <http://crawler/predicate/> .
-@prefix type:           <http://crawler/type/> .
+@prefix :               <crawler://predicate/> .
+@prefix type:           <crawler://type/> .
 @prefix comedy:         <http://www.muenchen.de/veranstaltungen/events/comedy.html> .
 @prefix musical:        <http://www.muenchen.de/veranstaltungen/events/musical.html> .
 @prefix page:           <http://www.muenchen.de/page/> .
@@ -83,5 +83,4 @@ location:label
     :path       ".//h1" .
 
 location:address
-    :path       ".//div[@id='sidebar']//span[@itemprop='address']" ;
-    :optional   true .
+    :path       ".//div[@id='sidebar']//span[@itemprop='address']" .
