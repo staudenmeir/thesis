@@ -2,7 +2,7 @@ package edu.tum.cs.crawler.model;
 
 import java.util.List;
 
-public class ItemPage extends Page {
+public class ObjectPage extends Page {
 
     protected Item item;
 

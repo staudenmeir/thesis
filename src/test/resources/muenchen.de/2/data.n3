@@ -1,0 +1,37 @@
+@prefix item:           <item://> .
+@prefix event:          <property://event/> .
+@prefix appointment:    <property://appointment/> .
+@prefix location:       <property://location/> .
+@prefix comedy:         <http://www.muenchen.de/veranstaltungen/events/comedy.html> .
+@prefix event1:         <http://www.muenchen.de/veranstaltungen/event/22060.html> .
+@prefix location1:      <http://www.muenchen.de/veranstaltungen/orte/131027.html> .
+@prefix appointment3:   <http://www.muenchen.de/veranstaltungen/event/22060.html#24e6404cfe8285be3066844daff4ddaca753fb23> .
+@prefix location2:      <http://www.muenchen.de/veranstaltungen/orte/140242.html> .
+@prefix event3:         <http://www.muenchen.de/veranstaltungen/event/12345.html> .
+@prefix appointment4:   <http://www.muenchen.de/veranstaltungen/event/12345.html#a42cc701ad4ef94e953ef1d7288d0b193935fa72> .
+@prefix location3:      <http://www.muenchen.de/veranstaltungen/orte/54321.html> .
+
+event1:
+    item:appointment    appointment3: .
+
+appointment3:
+    appointment:start   "2016-04-03T20:00:00.000+01:00"^^xsd:dateTime ;
+    item:location       location1: .
+
+location2:
+    location:address    "Schwanthalerstr. 12\n80336 München"^^xsd:string .
+
+comedy:
+    item:event          event3: .
+
+event3:
+    event:label         "Veranstaltung"^^xsd:string ;
+    item:appointment    appointment4: .
+
+appointment4:
+    appointment:start   "2016-03-02T20:00:00.000+01:00"^^xsd:dateTime ;
+    item:location       location3: .
+
+location3:
+    location:label      "Ort"^^xsd:string ;
+    location:address    "Adresse"^^xsd:string .

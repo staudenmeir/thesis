@@ -1,0 +1,43 @@
+@prefix item:           <item://> .
+@prefix event:          <property://event/> .
+@prefix appointment:    <property://appointment/> .
+@prefix location:       <property://location/> .
+@prefix comedy:         <http://www.muenchen.de/veranstaltungen/events/comedy.html> .
+@prefix musical:        <http://www.muenchen.de/veranstaltungen/events/musical.html> .
+@prefix event1:         <http://www.muenchen.de/veranstaltungen/event/22060.html> .
+@prefix appointment1:   <http://www.muenchen.de/veranstaltungen/event/22060.html#7ed598b68430196912e8d6ade0fcbc3930a5968c> .
+@prefix location1:      <http://www.muenchen.de/veranstaltungen/orte/131027.html> .
+@prefix event2:         <http://www.muenchen.de/veranstaltungen/event/18009.html> .
+@prefix appointment2:   <http://www.muenchen.de/veranstaltungen/event/18009.html#534bb1b0b45f9cd828b3b75b5edf930c75aa4f29> .
+@prefix location2:      <http://www.muenchen.de/veranstaltungen/orte/140242.html> .
+
+comedy:
+    item:event          event1: .
+
+musical:
+    item:event          event2: .
+
+event1:
+    event:label         "Kurt Krömer: Heute stimmt alles"^^xsd:string ;
+    event:description   """2014 verabschiedete sich der Comedian aus dem deutschen Fernsehen, um sich verstärkt um seine Bühnenkarriere zu kümmern. Das hat offenbar geklappt: Krömer tourt mit einem nagelneuen Programm, aber in gewohnt "altem" Retro-Look."""^^xsd:string ;
+    item:appointment    appointment1: .
+
+appointment1:
+    appointment:start   "2016-01-22T20:00:00.000+01:00"^^xsd:dateTime ;
+    item:location       location1: .
+
+location1:
+    location:label      "Kongresshalle Augsburg"^^xsd:string ;
+    location:address    "Gögginger Str. 10\n86159 Augsburg"^^xsd:string .
+
+event2:
+    event:label         "Ich war noch niemals in New York"^^xsd:string ;
+    item:appointment    appointment2: .
+
+appointment2:
+    appointment:start   "2016-01-03T14:30:00.000+01:00"^^xsd:dateTime ;
+    item:location       location2: .
+
+location2:
+    location:label      "Deutsches Theater"^^xsd:string ;
+    location:address    "Schwanthalerstr. 13\n80336 München"^^xsd:string .

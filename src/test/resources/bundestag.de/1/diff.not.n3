@@ -1,0 +1,9 @@
+@prefix :           <predicate://> .
+@prefix donation:   <property://donation/> .
+@prefix donation1:  <https://www.bundestag.de/bundestag/parteienfinanzierung/fundstellen50000/2010#a0b7dcad346ca3731b6e8e66609a9cc1cd5e9e19> .
+
+donation1:
+    :added  donation:party ;
+    :added  donation:amount ;
+    :added  donation:donor ;
+    :added  donation:date .

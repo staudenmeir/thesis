@@ -1,0 +1,43 @@
+@prefix item:       <item://> .
+@prefix series:     <property://series/> .
+@prefix season:     <property://season/> .
+@prefix episode:    <property://episode/> .
+@prefix actor:      <property://actor/> .
+@prefix section:    <http://www.imdb.com/chart/toptv/> .
+@prefix series1:    <http://www.imdb.com/title/tt0903747/> .
+@prefix season2:    <http://www.imdb.com/title/tt0903747/episodes?season=6> .
+@prefix series2:    <http://www.imdb.com/title/tt123456789/> .
+@prefix actor4:     <http://www.imdb.com/name/nm123456789/> .
+@prefix season3:    <http://www.imdb.com/title/tt123456789/episodes?season=1> .
+@prefix episode2:   <http://www.imdb.com/title/tt987654321/> .
+
+series1:
+    series:rating       "9.4"^^xsd:decimal ;
+    item:season         season2: .
+
+season2:
+    season:number       "6"^^xsd:int .
+
+section:
+    item:series         series2: .
+
+series2:
+    series:label        "Serie"^^xsd:string ;
+    series:rating       "8.7"^^xsd:decimal ;
+    series:description  "Beschreibung"^^xsd:string ;
+    series:poster       <http://ia.media-imdb.com/images/M/abc.jpg> ;
+    item:actor          actor4: ;
+    item:season         season3:  .
+
+actor4:
+    actor:label         "Schauspieler"^^xsd:string .
+
+season3:
+    season:number       "1"^^xsd:int ;
+    item:episode        episode2: .
+
+episode2:
+    episode:label       "Episode"^^xsd:string ;
+    episode:number      "1"^^xsd:int ;
+    episode:rating      "7.6"^^xsd:decimal .
+

@@ -1,0 +1,13 @@
+@prefix item:       <item://> .
+@prefix donation:   <property://donation/> .
+@prefix section:    <https://www.bundestag.de/bundestag/parteienfinanzierung/fundstellen50000> .
+@prefix donation3:  <https://www.bundestag.de/bundestag/parteienfinanzierung/fundstellen50000#901d990cf5d896bdd0744d99acfea6ba8bbe36bf> .
+
+section:
+    item:donation   donation3: .
+
+donation3:
+    donation:party  "Partei"^^xsd:string ;
+    donation:amount "123456.78"^^xsd:decimal ;
+    donation:donor  "Spender"^^xsd:string ;
+    donation:date   "03.04.2015"^^xsd:string .

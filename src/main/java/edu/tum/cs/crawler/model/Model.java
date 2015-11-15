@@ -1,18 +1,18 @@
 package edu.tum.cs.crawler.model;
 
-import org.openrdf.model.URI;
+import org.openrdf.model.IRI;
 
 import java.io.Serializable;
 
 public abstract class Model implements Serializable {
 
-    protected URI uri;
+    protected IRI uri;
 
-    public URI getUri() {
+    public IRI getUri() {
         return uri;
     }
 
-    public void setUri(URI uri) {
+    public void setUri(IRI uri) {
         this.uri = uri;
     }
 

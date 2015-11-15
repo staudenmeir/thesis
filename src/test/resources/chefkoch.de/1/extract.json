@@ -1,0 +1,25 @@
+{
+  "http://www.chefkoch.de/rezepte/372611122991708/Donauwelle-Konditorenart.html": {
+    "property://recipe/label": "Donauwelle Konditorenart",
+    "property://recipe/workingTime": "PT60M",
+    "property://recipe/difficulty": "Arbeitszeit: ca. 1 Std. / Koch-/Backzeit: ca. 30 Min. / Schwierigkeitsgrad: normal / Kalorien p. P.: keine Angabe",
+    "property://recipe/instructions": "Für den Teig 350 g Butter mit 250 g Zucker schaumig rühren, die 7 Eier einzeln zufügen. Mehl mit dem Backpulver mischen und gesiebt nach und nach unterrühren. Die Hälfte des Teiges auf ein gefettetes Backblech streichen. Die andere Hälfte mit 3 EL Kakao und 3 EL Puderzucker vermengen und auf den hellen Teig geben. Darauf 2 Gläser sehr gut abgetropfte Sauerkirschen verteilen. 30 Minuten bei 175 °C backen, anschließend auskühlen lassen.\n\nFür die Creme den Vanillepudding mit der Milch nach Packungsanleitung zubereiten, zusätzlich ein Päckchen Vanillinzucker zufügen. Abkühlen lassen, bis der Pudding lauwarm ist, dabei mehrmals rühren, um eine Haut zu vermeiden. 225 g Butter mit 5 EL Puderzucker schaumig rühren und mit dem Schneebesen in den Pudding mischen. Die Creme auf dem ausgekühlten Teig verteilen.\nFür den Guss Palmfett in einem Topf flüssig werden lassen. In einer Rührschüssel lauwarm abkühlen lassen. Mit dem Mixer 5 EL Zucker, 5 EL Kakao, 2 Eier und 2 EL Milch unterrühren. Den Guss auf der Cremeschicht verteilen, solange er noch flüssig ist.",
+    "property://recipe/portions": "1",
+    "property://recipe/rating": "rating rating-4_5"
+  },
+  "http://www.chefkoch.de/rezepte/372611122991708/Donauwelle-Konditorenart.html#aeabf42db4c00f93ee072e77e940e4d3e11c656f": {
+    "property://ingredient/label": "Zucker",
+    "property://ingredient/amount": "250 g"
+  },
+  "http://www.chefkoch.de/rezepte/2309811368533750/Kaiserschmarrn-la-Mittermeier.html": {
+    "property://recipe/label": "Kaiserschmarrn à la Mittermeier",
+    "property://recipe/workingTime": "PT15M",
+    "property://recipe/difficulty": "Arbeitszeit: ca. 15 Min. / Koch-/Backzeit: ca. 17 Min. / Schwierigkeitsgrad: simpel / Kalorien p. P.: keine Angabe",
+    "property://recipe/instructions": "Und so geht’s:\n1. Vorbereitung: Abrieb von der Zitrone herstellen. Milch, Mehl, Salz, Vanillezucker, Backpulver, Zucker, Zitronenabrieb und Rum zu einem glatten Teig verrühren. Die Rosinen in den Teig geben.\n2. Das Backblech im MULTI-Dampfgarer auf Einschubebene 3. Im Programm „INTERVALL-Dampf“ bei 200 °C vorheizen. Sobald das Backblech vorgeheizt ist, die Eier in den Vorteig geben und mit einem Schneebesen nur kurz unterheben. Die Eiklarstruktur darf nicht glatt gerührt werden.\n3. Zubereitung: Das heiße Backblech aus dem Ofen nehmen, mit Butter bestreichen und sofort mit dem Kaiserschmarrnteig begießen. Das Blech auf der Einschubebene 3 im Programm „INTERVALL-Dampf“ bei 200 °C für 12 Minuten garen.\n4. Aus dem Ofen nehmen, mit 2 Löffeln oder Gabeln in kleine Stücke zerreißen und mit Zucker bestreuen. Anschließend 5 Minuten im MULTI-Dampfgarer ausbacken lassen.\n5. Anrichten: Damit der Kaiserschmarrn fluffig und luftig gerät, ist es wichtig, dass die Eier sehr frisch sind. Mit Apfelmus servieren.",
+    "property://recipe/portions": "4"
+  },
+  "http://www.chefkoch.de/rezepte/2309811368533750/Kaiserschmarrn-la-Mittermeier.html#93255f1deef85ce566d727a2a04528d59da21f5c": {
+    "property://ingredient/label": "Rosinen",
+    "property://ingredient/amount": "2 EL"
+  }
+}

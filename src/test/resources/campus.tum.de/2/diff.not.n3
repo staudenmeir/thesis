@@ -1,0 +1,16 @@
+@prefix :           <predicate://> .
+@prefix faculty:    <property://faculty/> .
+@prefix course:     <property://course/> .
+@prefix course2:    <https://campus.tum.de/tumonline/lv.detail?clvnr=123456789> .
+@prefix faculty2:   <https://campus.tum.de/tumonline/organisationen.display?corg=12345> .
+@prefix course3:    <https://campus.tum.de/tumonline/lv.detail?clvnr=987654321> .
+
+course2:
+    :removed    course:label .
+
+faculty2:
+    :removed    faculty:label ;
+    :removed    course3: .
+
+course3:
+    :removed    course:label .

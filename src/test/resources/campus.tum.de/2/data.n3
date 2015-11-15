@@ -1,0 +1,33 @@
+@prefix item:           <item://> .
+@prefix faculty:        <property://faculty/> .
+@prefix course:         <property://course/> .
+@prefix appointment:    <property://appointment/> .
+@prefix section:        <https://campus.tum.de/tumonline/wborg.display_virtuell?PORGNR=1&PORGTYP=28567> .
+@prefix faculty1:       <https://campus.tum.de/tumonline/organisationen.display?corg=14189> .
+@prefix appointment1:   <https://campus.tum.de/tumonline/!wbTermin.wbEdit?pTerminNr=884835648> .
+@prefix course2:        <https://campus.tum.de/tumonline/lv.detail?clvnr=123456789> .
+@prefix faculty2:       <https://campus.tum.de/tumonline/organisationen.display?corg=12345> .
+@prefix course3:        <https://campus.tum.de/tumonline/lv.detail?clvnr=987654321> .
+
+appointment1:
+    appointment:start    "16:15:00.000"^^xsd:time .
+
+faculty1:
+    item:course         course2: .
+
+course2:
+    course:label         "Lehrveranstaltung"^^xsd:string ;
+    course:number        "0000012345"^^xsd:string ;
+    course:type          "Typ"^^xsd:string .
+
+section:
+    item:faculty         faculty2: .
+
+faculty2:
+    faculty:label        "Fakultät"^^xsd:string ;
+    item:course          course3: .
+
+course3:
+    course:label         "Lehrveranstaltung"^^xsd:string ;
+    course:number        "0000054321"^^xsd:string ;
+    course:type          "Typ"^^xsd:string .

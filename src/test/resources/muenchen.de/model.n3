@@ -1,14 +1,14 @@
-@prefix :               <crawler://predicate/> .
-@prefix type:           <crawler://type/> .
+@prefix :               <predicate://> .
+@prefix type:           <type://> .
+@prefix page:           <page://> .
+@prefix item:           <item://> .
+@prefix event:          <property://event/> .
+@prefix appointment:    <property://appointment/> .
+@prefix location:       <property://location/> .
 @prefix comedy:         <http://www.muenchen.de/veranstaltungen/events/comedy.html> .
 @prefix musical:        <http://www.muenchen.de/veranstaltungen/events/musical.html> .
-@prefix page:           <http://www.muenchen.de/page/> .
-@prefix item:           <http://www.muenchen.de/item/> .
-@prefix event:          <http://www.muenchen.de/property/event/> .
-@prefix appointment:    <http://www.muenchen.de/property/appointment/> .
-@prefix location:       <http://www.muenchen.de/property/location/> .
 
-_:
+<model:>
     :section    comedy: ;
     :section    musical: .
 
@@ -25,13 +25,12 @@ page:events
     :target     page:event .
 
 page:event
-    :type       type:item ;
+    :type       type:object ;
     :item       item:event ;
-    :sub        page:appointments ;
-    :ignore     <http://www.muenchen.de/veranstaltungen/event/11317.html> .
+    :sub        page:appointments .
 
 page:appointments
-    :type       type:items ;
+    :type       type:objects ;
     :item       item:appointment ;
     :sub        page:locations .
 
@@ -41,7 +40,7 @@ page:locations
     :target     page:location .
 
 page:location
-    :type       type:item ;
+    :type       type:object ;
     :item       item:location .
 
 item:event
@@ -50,9 +49,8 @@ item:event
     :property   event:description  .
 
 item:appointment
-    :path       "//*[@itemtype='http://schema.org/Event'][.//span[@itemprop='startDate']]" ;
-    :property   appointment:start ;
-    :property   appointment:end .
+    :path       ".//*[@itemtype='http://schema.org/Event'][.//span[@itemprop='startDate']]" ;
+    :property   appointment:start .
 
 item:location
     :path       "//div[@id='pagecontent']" ;
@@ -68,13 +66,6 @@ event:description
 
 appointment:start
     :path       ".//span[@itemprop='startDate']" ;
-    :attribute  "content" ;
-    :type       xsd:dateTime ;
-    :format     "yyyy-MM-dd'T'HH:mm:ssZ" .
-
-appointment:end
-    :path       ".//span[@itemprop='endDate']" ;
-    :optional   true ;
     :attribute  "content" ;
     :type       xsd:dateTime ;
     :format     "yyyy-MM-dd'T'HH:mm:ssZ" .

@@ -1,0 +1,18 @@
+@prefix :               <predicate://> .
+@prefix recipe:         <property://recipe/> .
+@prefix section1:       <http://www.chefkoch.de/rs/s0/Donauwelle/Rezepte.html> .
+@prefix recipe1:        <http://www.chefkoch.de/rezepte/372611122991708/Donauwelle-Konditorenart.html> .
+@prefix ingredient3:    <http://www.chefkoch.de/rezepte/372611122991708/Donauwelle-Konditorenart.html#1372ed70264a942badcb4453385974418a25c5df> .
+@prefix recipe2:        <http://www.chefkoch.de/rezepte/2309811368533750/Kaiserschmarrn-la-Mittermeier.html> .
+@prefix recipe3:        <http://www.chefkoch.de/rezepte/1234567890/Rezept.html> .
+@prefix ingredient4:    <http://www.chefkoch.de/rezepte/1234567890/Rezept.html#1372ed70264a942badcb4453385974418a25c5df> .
+
+recipe1:
+    :changed    recipe:rating ;
+    :removed    ingredient3: .
+
+recipe2:
+    :removed    recipe:rating .
+
+section1:
+    :removed    recipe3: .

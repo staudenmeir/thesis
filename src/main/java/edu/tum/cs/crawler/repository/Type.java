@@ -1,22 +1,22 @@
 package edu.tum.cs.crawler.repository;
 
-import org.openrdf.model.URI;
-import org.openrdf.model.impl.URIImpl;
+import org.openrdf.model.IRI;
+import org.openrdf.model.ValueFactory;
 
 public enum Type {
 
-    ITEM("item"), ITEMS("items"), LIST("list");
+    LIST("list"), OBJECT("object"), OBJECTS("objects");
 
     private String text;
 
-    private static final String prefix = "crawler://type/";
+    private static final String prefix = "type://";
 
     Type(String text){
         this.text = text;
     }
 
-    public URI getUri(){
-        return new URIImpl(toString());
+    public IRI getUri(ValueFactory factory){
+        return factory.createIRI(toString());
     }
 
     public String toString(){

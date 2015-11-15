@@ -1,6 +1,6 @@
 package edu.tum.cs.crawler.model;
 
-public class ItemsPage extends ItemPage implements ListPage {
+public class ObjectsPage extends ObjectPage implements ListPage {
 
     protected String next;
 

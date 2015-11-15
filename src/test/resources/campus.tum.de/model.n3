@@ -1,16 +1,15 @@
-@prefix :               <crawler://predicate/> .
-@prefix type:           <crawler://type/> .
+@prefix :               <predicate://> .
+@prefix type:           <type://> .
+@prefix page:           <page://> .
+@prefix link:           <link://> .
+@prefix item:           <item://> .
+@prefix faculty:        <property://faculty/> .
+@prefix course:         <property://course/> .
+@prefix appointment:    <property://appointment/> .
+@prefix location:       <property://location/> .
 @prefix section:        <https://campus.tum.de/tumonline/wborg.display_virtuell?PORGNR=1&PORGTYP=28567> .
-@prefix page:           <https://campus.tum.de/page/> .
-@prefix link:           <https://campus.tum.de/link/> .
-@prefix item:           <https://campus.tum.de/item/> .
-@prefix faculty:        <https://campus.tum.de/property/faculty/> .
-@prefix course:         <https://campus.tum.de/property/course/> .
-@prefix group:          <https://campus.tum.de/property/group/> .
-@prefix appointment:    <https://campus.tum.de/property/appointment/> .
-@prefix location:       <https://campus.tum.de/property/location/> .
 
-_:
+<model:>
     :section    section: .
 
 section:
@@ -22,7 +21,7 @@ page:faculties
     :target     page:faculty .
 
 page:faculty
-    :type       type:item ;
+    :type       type:object ;
     :item       item:faculty ;
     :link       link:courses .
 
@@ -34,31 +33,26 @@ page:courses
     :target     page:course .
 
 page:course
-    :type       type:item ;
+    :type       type:object ;
     :item       item:course ;
-    :link       link:groups .
-
-page:groups
-    :type       type:items ;
-    :item       item:group ;
-    :sub        page:appointments .
+    :link       link:appointments .
 
 page:appointments
-    :type       type:items ;
+    :type       type:objects ;
     :item       item:appointment ;
     :sub        page:location .
 
 page:location
-    :type       type:items ;
+    :type       type:objects ;
     :item       item:location .
 
 link:courses
     :path       "//a[text()='Lehrveranstaltungen']" ;
     :target     page:courses .
 
-link:groups
+link:appointments
     :path       "//label[text()='Abhaltungstermine']/../following-sibling::td//a" ;
-    :target     page:groups .
+    :target     page:appointments .
 
 item:faculty
     :path       "//table[@class='nav']" ;
@@ -70,13 +64,10 @@ item:course
     :property   course:number ;
     :property   course:type .
 
-item:group
-    :path       "//table[@id='tabLvTermine']//tr[@class='coRow coTableGR1   ']" ;
-    :property   group:label .
-
 item:appointment
-    :path       ".//following-sibling::tr[1]" ;
+    :path       "//table[@id='tabLvTermine']//tr[contains(@class, 'hi coTableR')]" ;
     :id         "./td[2]/a" ;
+    :property   appointment:group ;
     :property   appointment:date ;
     :property   appointment:start ;
     :property   appointment:end .
@@ -98,8 +89,8 @@ course:number
 course:type
     :path       ".//label[text()='Art']/../following-sibling::td//span" .
 
-group:label
-    :path       "./td" .
+appointment:group
+    :path       "./preceding-sibling::tr[@class='coRow coTableGR1   '][1]/td" .
 
 appointment:date
     :path       "./td[2]/a" ;

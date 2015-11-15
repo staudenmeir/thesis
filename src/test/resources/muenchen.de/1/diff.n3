@@ -1,0 +1,11 @@
+@prefix :           <predicate://> .
+@prefix comedy:     <http://www.muenchen.de/veranstaltungen/events/comedy.html> .
+@prefix musical:    <http://www.muenchen.de/veranstaltungen/events/musical.html> .
+@prefix event1:     <http://www.muenchen.de/veranstaltungen/event/22060.html> .
+@prefix event2:     <http://www.muenchen.de/veranstaltungen/event/18009.html> .
+
+comedy:
+    :added  event1: .
+
+musical:
+    :added  event2: .

@@ -1,0 +1,23 @@
+{
+  "http://www.muenchen.de/veranstaltungen/event/22060.html": {
+    "property://event/label": "Kurt Krömer: Heute stimmt alles",
+    "property://event/description": "2014 verabschiedete sich der Comedian aus dem deutschen Fernsehen, um sich verstärkt um seine Bühnenkarriere zu kümmern. Das hat offenbar geklappt: Krömer tourt mit einem nagelneuen Programm, aber in gewohnt \"altem\" Retro-Look."
+  },
+  "http://www.muenchen.de/veranstaltungen/event/22060.html#7ed598b68430196912e8d6ade0fcbc3930a5968c": {
+    "property://appointment/start": "2016-01-22T20:00:00+01"
+  },
+  "http://www.muenchen.de/veranstaltungen/orte/131027.html": {
+    "property://location/label": "Kongresshalle Augsburg",
+    "property://location/address": "Gögginger Str. 10\n86159 Augsburg"
+  },
+  "http://www.muenchen.de/veranstaltungen/event/18009.html": {
+    "property://event/label": "Ich war noch niemals in New York"
+  },
+  "http://www.muenchen.de/veranstaltungen/event/18009.html#534bb1b0b45f9cd828b3b75b5edf930c75aa4f29": {
+    "property://appointment/start": "2016-01-03T14:30:00+01"
+  },
+  "http://www.muenchen.de/veranstaltungen/orte/140242.html": {
+    "property://location/label": "Deutsches Theater",
+    "property://location/address": "Schwanthalerstr. 13\n80336 München"
+  }
+}

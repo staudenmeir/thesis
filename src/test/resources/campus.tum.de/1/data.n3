@@ -1,0 +1,33 @@
+@prefix item:           <item://> .
+@prefix faculty:        <property://faculty/> .
+@prefix course:         <property://course/> .
+@prefix appointment:    <property://appointment/> .
+@prefix location:       <property://location/> .
+@prefix section:        <https://campus.tum.de/tumonline/wborg.display_virtuell?PORGNR=1&PORGTYP=28567> .
+@prefix faculty1:       <https://campus.tum.de/tumonline/organisationen.display?corg=14189> .
+@prefix course1:        <https://campus.tum.de/tumonline/lv.detail?clvnr=950208933> .
+@prefix appointment1:   <https://campus.tum.de/tumonline/!wbTermin.wbEdit?pTerminNr=884835648> .
+@prefix location1:      <https://campus.tum.de/tumonline/ris.einzelRaum?raumKey=29234> .
+
+section:
+    item:faculty        faculty1: .
+
+faculty1:
+    faculty:label       "Fakultät für Informatik"^^xsd:string ;
+    item:course         course1: .
+
+course1:
+    course:label        "Tutorübungen zu Grundlagen: Betriebssysteme und Systemsoftware (IN0009)"^^xsd:string ;
+    course:number       "0000000052"^^xsd:string ;
+    course:type         "Übung"^^xsd:string ;
+    item:appointment    appointment1: .
+
+appointment1:
+    appointment:group   "Gruppe 07"^^xsd:string ;
+    appointment:date    "2015-11-11"^^xsd:date ;
+    appointment:start   "16:00:00.000"^^xsd:time ;
+    appointment:end     "18:00:00.000"^^xsd:time ;
+    item:location       location1: .
+
+location1:
+    location:label      "01.07.023, Seminarraum (5607.01.023)"^^xsd:string .

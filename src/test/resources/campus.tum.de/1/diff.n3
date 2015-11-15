@@ -1,0 +1,6 @@
+@prefix :           <predicate://> .
+@prefix section:    <https://campus.tum.de/tumonline/wborg.display_virtuell?PORGNR=1&PORGTYP=28567> .
+@prefix faculty1:   <https://campus.tum.de/tumonline/organisationen.display?corg=14189> .
+
+section:
+    :added  faculty1: .

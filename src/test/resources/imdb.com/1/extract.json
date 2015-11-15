@@ -1,0 +1,25 @@
+{
+  "http://www.imdb.com/title/tt0903747/": {
+    "property://series/label": "Breaking Bad",
+    "property://series/rating": "9,5",
+    "property://series/description": "A chemistry teacher diagnosed with terminal lung cancer teams up with his former student to cook and sell crystal meth.",
+    "property://series/poster": "http://ia.media-imdb.com/images/M/MV5BMTQ0ODYzODc0OV5BMl5BanBnXkFtZTgwMDk3OTcyMDE@._V1_SY317_CR0,0,214,317_AL_.jpg"
+  },
+  "http://www.imdb.com/name/nm0186505/": {
+    "property://actor/label": "Bryan Cranston"
+  },
+  "http://www.imdb.com/name/nm0666739/": {
+    "property://actor/label": "Aaron Paul"
+  },
+  "http://www.imdb.com/name/nm0348152/": {
+    "property://actor/label": "Anna Gunn"
+  },
+  "http://www.imdb.com/title/tt0903747/episodes?season=3": {
+    "property://season/number": "Season 3"
+  },
+  "http://www.imdb.com/title/tt1615556/": {
+    "property://episode/label": "Sunset",
+    "property://episode/number": "Season 3, Episode 6",
+    "property://episode/rating": "7,9"
+  }
+}

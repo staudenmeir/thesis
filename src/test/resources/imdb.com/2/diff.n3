@@ -1,0 +1,13 @@
+@prefix :           <predicate://> .
+@prefix series:     <property://series/> .
+@prefix section:    <http://www.imdb.com/chart/toptv/> .
+@prefix series1:    <http://www.imdb.com/title/tt0903747/> .
+@prefix season2:    <http://www.imdb.com/title/tt0903747/episodes?season=6> .
+@prefix series2:    <http://www.imdb.com/title/tt123456789/> .
+
+series1:
+    :changed    series:rating ;
+    :removed    season2: .
+
+section:
+    :removed    series2: .

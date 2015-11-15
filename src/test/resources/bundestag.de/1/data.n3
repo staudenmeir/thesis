@@ -1,0 +1,13 @@
+@prefix item:       <item://> .
+@prefix donation:   <property://donation/> .
+@prefix section:    <https://www.bundestag.de/bundestag/parteienfinanzierung/fundstellen50000> .
+@prefix donation1:  <https://www.bundestag.de/bundestag/parteienfinanzierung/fundstellen50000/2010#a0b7dcad346ca3731b6e8e66609a9cc1cd5e9e19> .
+
+section:
+    item:donation   donation1: .
+
+donation1:
+    donation:party  "FDP"^^xsd:string ;
+    donation:amount "55886.41"^^xsd:decimal ;
+    donation:donor  "Bayerische Motoren Werke AG\nPetuelring 130\n80788 München"^^xsd:string ;
+    donation:date   "26.02.2010"^^xsd:string .

@@ -1,0 +1,16 @@
+@prefix :               <predicate://> .
+@prefix appointment:    <property://appointment/> .
+@prefix section:        <https://campus.tum.de/tumonline/wborg.display_virtuell?PORGNR=1&PORGTYP=28567> .
+@prefix faculty1:       <https://campus.tum.de/tumonline/organisationen.display?corg=14189> .
+@prefix appointment1:   <https://campus.tum.de/tumonline/!wbTermin.wbEdit?pTerminNr=884835648> .
+@prefix course2:        <https://campus.tum.de/tumonline/lv.detail?clvnr=123456789> .
+@prefix faculty2:       <https://campus.tum.de/tumonline/organisationen.display?corg=12345> .
+
+appointment1:
+    :changed    appointment:start .
+
+faculty1:
+    :removed    course2: .
+
+section:
+    :removed    faculty2: .

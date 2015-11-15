@@ -1,0 +1,24 @@
+@prefix :               <predicate://> .
+@prefix faculty:        <property://faculty/> .
+@prefix course:         <property://course/> .
+@prefix appointment:    <property://appointment/> .
+@prefix location:       <property://location/> .
+@prefix faculty1:       <https://campus.tum.de/tumonline/organisationen.display?corg=14189> .
+@prefix course1:        <https://campus.tum.de/tumonline/lv.detail?clvnr=950208933> .
+@prefix appointment1:   <https://campus.tum.de/tumonline/!wbTermin.wbEdit?pTerminNr=884835648> .
+@prefix location1:      <https://campus.tum.de/tumonline/ris.einzelRaum?raumKey=29234> .
+
+faculty1:
+    :added  faculty:label ;
+    :added  course1: .
+
+course1:
+    :added  course:label ;
+    :added  appointment1: .
+
+appointment1:
+    :added  appointment:group ;
+    :added  location1: .
+
+location1:
+    :added  location:label .

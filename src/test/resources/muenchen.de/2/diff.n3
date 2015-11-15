@@ -1,0 +1,16 @@
+@prefix :               <predicate://> .
+@prefix location:       <property://location/> .
+@prefix comedy:         <http://www.muenchen.de/veranstaltungen/events/comedy.html> .
+@prefix event1:         <http://www.muenchen.de/veranstaltungen/event/22060.html> .
+@prefix appointment3:   <http://www.muenchen.de/veranstaltungen/event/22060.html#24e6404cfe8285be3066844daff4ddaca753fb23> .
+@prefix location2:      <http://www.muenchen.de/veranstaltungen/orte/140242.html> .
+@prefix event3:         <http://www.muenchen.de/veranstaltungen/event/12345.html> .
+
+event1:
+    :removed    appointment3: .
+
+location2:
+    :changed    location:address .
+
+comedy:
+    :removed    event3: .

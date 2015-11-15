@@ -1,6 +1,6 @@
 package edu.tum.cs.crawler.model;
 
-import org.openrdf.model.URI;
+import org.openrdf.model.IRI;
 
 import java.util.Map;
 
@@ -12,11 +12,11 @@ public class Property extends Model {
 
     protected String attribute;
 
-    protected String regex;
+    protected String pattern;
 
     protected Map<String, String> replaces;
 
-    protected URI type;
+    protected IRI type;
 
     protected String format;
 
@@ -36,16 +36,16 @@ public class Property extends Model {
         this.optional = optional;
     }
 
-    public String getRegex() {
-        return regex;
+    public String getPattern() {
+        return pattern;
     }
 
-    public void setRegex(String regex) {
-        this.regex = regex;
+    public void setPattern(String pattern) {
+        this.pattern = pattern;
     }
 
-    public boolean hasRegex() {
-        return (regex != null);
+    public boolean hasPattern() {
+        return (pattern != null);
     }
 
     public String getAttribute() {
@@ -68,11 +68,11 @@ public class Property extends Model {
         this.replaces = replaces;
     }
 
-    public URI getType() {
+    public IRI getType() {
         return type;
     }
 
-    public void setType(URI type) {
+    public void setType(IRI type) {
         this.type = type;
     }
 

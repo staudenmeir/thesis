@@ -1,0 +1,35 @@
+@prefix item:           <item://> .
+@prefix recipe:         <property://recipe/> .
+@prefix ingredient:     <property://ingredient/> .
+@prefix section1:       <http://www.chefkoch.de/rs/s0/Donauwelle/Rezepte.html> .
+@prefix recipe1:        <http://www.chefkoch.de/rezepte/372611122991708/Donauwelle-Konditorenart.html> .
+@prefix ingredient3:    <http://www.chefkoch.de/rezepte/372611122991708/Donauwelle-Konditorenart.html#1372ed70264a942badcb4453385974418a25c5df> .
+@prefix recipe2:        <http://www.chefkoch.de/rezepte/2309811368533750/Kaiserschmarrn-la-Mittermeier.html> .
+@prefix recipe3:        <http://www.chefkoch.de/rezepte/1234567890/Rezept.html> .
+@prefix ingredient4:    <http://www.chefkoch.de/rezepte/1234567890/Rezept.html#1372ed70264a942badcb4453385974418a25c5df> .
+
+recipe1:
+    recipe:rating       "4"^^xsd:decimal ;
+    item:ingredient     ingredient3: .
+
+ingredient3:
+    ingredient:label    "Zutat"^^xsd:string ;
+    ingredient:amount   "Menge"^^xsd:string .
+
+recipe2:
+    recipe:rating       "2"^^xsd:decimal .
+
+section1:
+    item:recipe         recipe3: .
+
+recipe3:
+    recipe:label        "Rezept"^^xsd:string ;
+    recipe:workingTime  "PT30M"^^xsd:duration ;
+    recipe:difficulty   "Schwierigkeitsgrad"^^xsd:string ;
+    recipe:instructions "Zubereitung"^^xsd:string ;
+    recipe:portions     "3"^^xsd:int ;
+    item:ingredient     ingredient4: .
+
+ingredient4:
+    ingredient:label    "Zutat"^^xsd:string ;
+    ingredient:amount   "Menge"^^xsd:string .

@@ -1,0 +1,24 @@
+@prefix :           <predicate://> .
+@prefix series:     <property://series/> .
+@prefix actor:      <property://actor/> .
+@prefix season:     <property://season/> .
+@prefix episode:    <property://episode/> .
+@prefix series1:    <http://www.imdb.com/title/tt0903747/> .
+@prefix actor1:     <http://www.imdb.com/name/nm0186505/> .
+@prefix season1:    <http://www.imdb.com/title/tt0903747/episodes?season=3> .
+@prefix episode1:   <http://www.imdb.com/title/tt1615556/> .
+
+series1:
+    :added  series:label ;
+    :added  actor1: ;
+    :added  season1: .
+
+actor1:
+    :added  actor:label .
+
+season1:
+    :added  season:number ;
+    :added  episode1: .
+
+episode1:
+    :added  episode:label .

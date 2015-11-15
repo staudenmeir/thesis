@@ -1,0 +1,126 @@
+@prefix :           <predicate://> .
+@prefix type:       <type://> .
+@prefix page:       <page://> .
+@prefix item:       <item://> .
+@prefix series:     <property://series/> .
+@prefix actor:      <property://actor/> .
+@prefix season:     <property://season/> .
+@prefix episode:    <property://episode/> .
+@prefix section:    <http://www.imdb.com/chart/toptv/> .
+
+<model:>
+    :section    section:  .
+
+section:
+    :page       page:seriess .
+
+page:seriess
+    :type       type:links ;
+    :path       "//table[@class='chart full-width']//a[@title]" ;
+    :target     page:series .
+
+page:series
+    :type       type:object ;
+    :item       item:series ;
+    :sub        page:actors ;
+    :sub        page:seasons ;
+    :param      "pf_rd_m" ;
+    :param      "pf_rd_p" ;
+    :param      "pf_rd_r" ;
+    :param      "pf_rd_s" ;
+    :param      "pf_rd_t" ;
+    :param      "pf_rd_i" ;
+    :param      "ref_" .
+
+page:actors
+    :type       type:objects ;
+    :item       item:actor ;
+    :param      "ref_" .
+
+page:seasons
+    :type       type:links ;
+    :path       ".//div[@id='title-episode-widget']//a[contains(@href, '?season=')][not(contains(@href, '?season=-1'))]" ;
+    :target     page:season .
+
+page:season
+    :type       type:object ;
+    :item       item:season ;
+    :sub        page:episodes ;
+    :param      "ref_" .
+
+page:episodes
+    :type       type:links ;
+    :path       ".//a[@itemprop='name']" ;
+    :target     page:episode .
+
+page:episode
+    :type       type:object ;
+    :item       item:episode ;
+    :param      "ref_" .
+
+item:series
+    :path       "//div[@id='content-2-wide']" ;
+    :property   series:label ;
+    :property   series:rating ;
+    :property   series:description ;
+    :property   series:poster .
+
+item:actor
+    :path       ".//div[@itemprop='actors']/a" ;
+    :id         "." ;
+    :property   actor:label .
+
+item:season
+    :path       "//div[@id='episodes_content']" ;
+    :property   season:number .
+
+item:episode
+    :path       "//td[@id='overview-top']" ;
+    :property   episode:label ;
+    :property   episode:number ;
+    :property   episode:rating .
+
+series:label
+    :path       ".//h1/span[1]" .
+
+series:rating
+    :path       ".//span[@itemprop='ratingValue']" ;
+    :replace [
+        :old    "," ;
+        :new    "."
+    ] ;
+    :type       xsd:decimal .
+
+series:description
+    :path       ".//p[@itemprop='description']" .
+
+series:poster
+    :path       ".//td[@id='img_primary']//img" ;
+    :optional   true ;
+    :attribute  "src" ;
+    :type       xsd:anyURI .
+
+actor:label
+    :path       "./span" .
+
+season:number
+    :path       ".//h3[@id='episode_top']" ;
+    :pattern    "(?<=Season )\d+?" ;
+    :type       xsd:int .
+
+episode:label
+    :path       "./h1/span[1]" .
+
+episode:number
+    :path       "./h2/span" ;
+    :pattern    "(?<=Episode )\d+?" ;
+    :type       xsd:int .
+
+episode:rating
+    :path       ".//span[@itemprop='ratingValue']" ;
+    :optional   true ;
+    :replace [
+        :old    "," ;
+        :new    "."
+    ] ;
+    :type       xsd:decimal .

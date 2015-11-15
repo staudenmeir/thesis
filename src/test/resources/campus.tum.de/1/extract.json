@@ -1,0 +1,19 @@
+{
+  "https://campus.tum.de/tumonline/organisationen.display?corg=14189": {
+    "property://faculty/label": "Fakultät für Informatik"
+  },
+  "https://campus.tum.de/tumonline/lv.detail?clvnr=950208933": {
+    "property://course/label": "Tutorübungen zu Grundlagen: Betriebssysteme und Systemsoftware (IN0009)",
+    "property://course/number": "0000000052",
+    "property://course/type": "Übung"
+  },
+  "https://campus.tum.de/tumonline/!wbTermin.wbEdit?pTerminNr=884835648": {
+    "property://appointment/group": "Gruppe 07",
+    "property://appointment/date": "11.11.2015",
+    "property://appointment/start": "16:00",
+    "property://appointment/end": "18:00"
+  },
+  "https://campus.tum.de/tumonline/ris.einzelRaum?raumKey=29234": {
+    "property://location/label": "01.07.023, Seminarraum (5607.01.023)"
+  }
+}

@@ -1,0 +1,6 @@
+@prefix :           <predicate://> .
+@prefix section:    <https://www.bundestag.de/bundestag/parteienfinanzierung/fundstellen50000> .
+@prefix donation1:  <https://www.bundestag.de/bundestag/parteienfinanzierung/fundstellen50000/2010#a0b7dcad346ca3731b6e8e66609a9cc1cd5e9e19> .
+
+section:
+    :added  donation1: .

@@ -1,0 +1,12 @@
+@prefix :               <predicate://> .
+@prefix recipe:         <property://recipe/> .
+@prefix ingredient:     <property://ingredient/> .
+@prefix recipe1:        <http://www.chefkoch.de/rezepte/372611122991708/Donauwelle-Konditorenart.html> .
+@prefix ingredient1:    <http://www.chefkoch.de/rezepte/372611122991708/Donauwelle-Konditorenart.html#aeabf42db4c00f93ee072e77e940e4d3e11c656f> .
+
+recipe1:
+    :added  recipe:label ;
+    :added  ingredient1: .
+
+ingredient1:
+    :added  ingredient:label .
