@@ -19,6 +19,8 @@ import org.openrdf.sail.memory.model.MemLiteral;
 import javax.jms.JMSException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 public class CrawlerTest extends TestCase {
@@ -75,7 +77,6 @@ public class CrawlerTest extends TestCase {
 
         testResult(diffRepository, context, "bundestag.de/2/diff");
         testResultNot(diffRepository, context, "bundestag.de/2/diff.not");
-
     }
 
     /**
@@ -224,7 +225,8 @@ public class CrawlerTest extends TestCase {
      */
     protected void seed(Repository repository, String name, IRI context) throws IOException {
         InputStream input = this.getClass().getResourceAsStream("/" + name + ".n3");
-        repository.getConnection().add(input, "", RDFFormat.N3, context);
+        InputStreamReader reader = new InputStreamReader(input, StandardCharsets.UTF_8);
+        repository.getConnection().add(reader, "", RDFFormat.N3, context);
     }
 
     /**
@@ -232,7 +234,8 @@ public class CrawlerTest extends TestCase {
      */
     protected void testExtracts(Crawler crawler, String name) throws IOException {
         InputStream input = this.getClass().getResourceAsStream("/" + name + ".json");
-        JSONTokener jsonTokener = new JSONTokener(input);
+        InputStreamReader reader = new InputStreamReader(input, StandardCharsets.UTF_8);
+        JSONTokener jsonTokener = new JSONTokener(reader);
         JSONObject entries = (JSONObject) jsonTokener.nextValue();
         for(Iterator<String> iterator = entries.keys(); iterator.hasNext();) {
             String uri = iterator.next();
